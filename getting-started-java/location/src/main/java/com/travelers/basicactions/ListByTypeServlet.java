@@ -16,6 +16,7 @@
 
 package com.travelers.basicactions;
 
+import com.google.gson.Gson;
 import com.travelers.daos.LocationDao;
 import com.travelers.location.objects.Location;
 import com.travelers.location.objects.Result;
@@ -62,7 +63,16 @@ public class ListByTypeServlet extends HttpServlet {
         + " for type " + (String) req.getSession().getAttribute("locationType"));
     req.getSession().setAttribute("cursor", endCursor);
     req.getSession().setAttribute("page", "list");
-    req.getRequestDispatcher("/base.jsp").forward(req, resp);
+    logger.log(Level.INFO, "Content Type: " + req.getContentType());
+    if (req.getContentType() != null && "application/json".equalsIgnoreCase(req.getContentType())
+    		|| "json".equalsIgnoreCase(req.getParameter("format"))) {
+    	//Use GSon to convert your objects to a String.
+    	resp.getWriter().write(new Gson().toJson(locations));
+    	resp.flushBuffer();
+    }
+    else {
+    	req.getRequestDispatcher("/base.jsp").forward(req, resp);
+    }
   }
 }
 // [END example]

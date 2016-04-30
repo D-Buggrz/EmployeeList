@@ -98,18 +98,17 @@ public class ListLocationServlet extends HttpServlet {
     for (Location location : locations) {
       locationNames.append(location.getUuid() + " ");
     }
+    req.setAttribute("cursor", endCursor);
+    req.setAttribute("page", "list");
+    
     logger.log(Level.INFO, "Loaded locations: " + locationNames.toString());
-    logger.log(Level.INFO, "Content Type: " + req.getContentType().toString());
+    logger.log(Level.INFO, "Content Type: " + req.getContentType());
     if (req.getContentType() != null && "application/json".equalsIgnoreCase(req.getContentType())
     		|| "json".equalsIgnoreCase(req.getParameter("format"))) {
     	//Use GSon to convert your objects to a String.
-    	Gson gson = new GsonBuilder().create();
-    	
     	resp.getWriter().write(new Gson().toJson(locations));
     	resp.flushBuffer();
     } else {
-	    req.setAttribute("cursor", endCursor);
-	    req.setAttribute("page", "list");
 	    req.getRequestDispatcher("/base.jsp").forward(req, resp);
     }
   }

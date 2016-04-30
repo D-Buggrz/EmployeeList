@@ -16,9 +16,12 @@
 
 package com.travelers.basicactions;
 
+import com.google.gson.Gson;
 import com.travelers.daos.LocationDao;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 @WebServlet(name = "delete", value = "/delete")
 public class DeleteLocationServlet extends HttpServlet {
-
+	  private static final Logger logger = Logger.getLogger(DeleteLocationServlet.class.getName());
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
@@ -38,7 +41,15 @@ public class DeleteLocationServlet extends HttpServlet {
     LocationDao dao = (LocationDao) this.getServletContext().getAttribute("dao");
     try {
       dao.deleteLocation(id);
-      resp.sendRedirect("/locations");
+      logger.log(Level.INFO, "Content Type: " + req.getContentType());
+      if (req.getContentType() != null && "application/json".equalsIgnoreCase(req.getContentType())
+      		|| "json".equalsIgnoreCase(req.getParameter("format"))) {
+      	//Use GSon to convert your objects to a String.
+      	resp.getWriter().write("Location " + id + "has been deleted!");
+      	resp.flushBuffer();
+      } else {
+    	  resp.sendRedirect("/locations");
+      }
     } catch (Exception e) {
       throw new ServletException("Error deleting location", e);
     }

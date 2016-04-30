@@ -16,6 +16,7 @@
 
 package com.travelers.basicactions;
 
+import com.google.gson.Gson;
 import com.travelers.daos.LocationDao;
 import com.travelers.location.objects.Location;
 
@@ -49,7 +50,15 @@ public class ReadLocationServlet extends HttpServlet {
       // [END log]
       req.setAttribute("location", location);
       req.setAttribute("page", "view");
-      req.getRequestDispatcher("/base.jsp").forward(req, resp);
+      if (req.getContentType() != null && "application/json".equalsIgnoreCase(req.getContentType())
+      		|| "json".equalsIgnoreCase(req.getParameter("format"))) {
+      	//Use GSon to convert your objects to a String.
+      	resp.getWriter().write(new Gson().toJson(location));
+      	resp.flushBuffer();
+      }
+      else {
+    	  req.getRequestDispatcher("/base.jsp").forward(req, resp);
+      }
     } catch (Exception e) {
       throw new ServletException("Error reading location", e);
     }

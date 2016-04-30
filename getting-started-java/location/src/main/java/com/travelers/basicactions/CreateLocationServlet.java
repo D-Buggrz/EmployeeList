@@ -16,6 +16,8 @@
 
 package com.travelers.basicactions;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.travelers.daos.LocationDao;
 import com.travelers.location.objects.Location;
 
@@ -79,7 +81,16 @@ public class CreateLocationServlet extends HttpServlet {
     try {
       Long id = dao.createLocation(location);
       logger.log(Level.INFO, "Created location {0}", location);
-      resp.sendRedirect("/read?id=" + id.toString());   // read what we just wrote
+      logger.log(Level.INFO, "Content Type: " + req.getContentType());
+      if (req.getContentType() != null && "application/json".equalsIgnoreCase(req.getContentType())
+      		|| "json".equalsIgnoreCase(req.getParameter("format"))) {
+      	//Use GSon to convert your objects to a String.
+      	resp.getWriter().write(new Gson().toJson(location));
+      	resp.flushBuffer();
+      }
+      else {
+    	  resp.sendRedirect("/read?id=" + id.toString());   // read what we just wrote
+      }
     } catch (Exception e) {
       throw new ServletException("Error creating location", e);
     }

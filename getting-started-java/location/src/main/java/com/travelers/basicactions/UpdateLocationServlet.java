@@ -16,10 +16,13 @@
 
 package com.travelers.basicactions;
 
+import com.google.gson.Gson;
 import com.travelers.daos.LocationDao;
 import com.travelers.location.objects.Location;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -34,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "update", value = "/update")
 public class UpdateLocationServlet extends HttpServlet {
 
+	  private static final Logger logger = Logger.getLogger(UpdateLocationServlet.class.getName());
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
@@ -71,7 +75,16 @@ public class UpdateLocationServlet extends HttpServlet {
         .roomCapacity(req.getParameter(Location.ROOM_CAPACITY))
         .build();
       dao.updateLocation(location);
-      resp.sendRedirect("/read?id=" + req.getParameter("id"));
+      logger.log(Level.INFO, "Content Type: " + req.getContentType());
+      if (req.getContentType() != null && "application/json".equalsIgnoreCase(req.getContentType())
+        		|| "json".equalsIgnoreCase(req.getParameter("format"))) {
+        	//Use GSon to convert your objects to a String.
+        	resp.getWriter().write(new Gson().toJson(location));
+        	resp.flushBuffer();
+        }
+        else {
+        	resp.sendRedirect("/read?id=" + req.getParameter("id"));
+        }
     } catch (Exception e) {
       throw new ServletException("Error updating location", e);
     }
