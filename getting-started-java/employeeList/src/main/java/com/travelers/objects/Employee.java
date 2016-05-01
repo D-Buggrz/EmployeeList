@@ -44,7 +44,7 @@ public class Employee {
 // [START constructor]
   // We use a Builder pattern here to simplify and standardize construction of Employee objects.
   private Employee(Builder builder) {
-    this.employeeLastName = builder.uuid;
+    this.employeeLastName = builder.employeeLastName;
     this.employeeFirstName = builder.employeeFirstName;
     this.phoneNumber = builder.phoneNumber;
     this.building = builder.building;

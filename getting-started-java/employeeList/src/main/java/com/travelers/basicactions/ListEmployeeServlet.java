@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.travelers.daos.CloudSqlDao;
 import com.travelers.daos.DatastoreDao;
 import com.travelers.daos.EmployeeDao;
@@ -95,8 +94,9 @@ public class ListEmployeeServlet extends HttpServlet {
     }
     req.getSession().getServletContext().setAttribute("employees", employees);
     StringBuilder employeeNames = new StringBuilder();
+    employeeNames.append("|");
     for (Employee employee : employees) {
-      employeeNames.append(employee.getUuid() + " ");
+      employeeNames.append(employee.getEmployeeLastName() + "," + employee.getEmployeeFirstName() +"|");
     }
     req.setAttribute("cursor", endCursor);
     req.setAttribute("page", "list");
