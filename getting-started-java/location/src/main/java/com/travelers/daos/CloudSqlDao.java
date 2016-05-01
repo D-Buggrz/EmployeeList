@@ -153,7 +153,7 @@ public class CloudSqlDao implements LocationDao {
     		+ "uuid, locationName, description, conferenceRooms, locationType, currentMeetingAgenda, "
     		+ "imageURLs, videoConferencingEnabled, roomCapacity"
     		+ " FROM locations ORDER BY locationType ASC, locationName ASC "
-        + "LIMIT 10 OFFSET ?";
+        + "LIMIT 100 OFFSET ?";
     try (Connection conn = dataSource.getConnection();
         PreparedStatement listLocationsStmt = conn.prepareStatement(listLocationsString)) {
       listLocationsStmt.setInt(1, offset);
@@ -182,8 +182,8 @@ public class CloudSqlDao implements LocationDao {
         if (rs.next()) {
           totalNumRows = rs.getInt(1);
         }
-        if (totalNumRows > offset + 10) {
-          return new Result<>(resultLocations, Integer.toString(offset + 10));
+        if (totalNumRows > offset + 100) {
+          return new Result<>(resultLocations, Integer.toString(offset + 100));
         } else {
           return new Result<>(resultLocations);
         }
@@ -201,7 +201,7 @@ public class CloudSqlDao implements LocationDao {
     final String listLocationsString = "SELECT SQL_CALC_FOUND_ROWS  id, createdBy, createdById, "
     		+ "uuid, locationName, description, conferenceRooms, locationType, currentMeetingAgenda, "
     		+ "imageURLs, videoConferencingEnabled, roomCapacity FROM locations WHERE locationType = ? "
-        + "ORDER BY locationType ASC, locationName ASC LIMIT 10 OFFSET ?";
+        + "ORDER BY locationType ASC, locationName ASC LIMIT 100 OFFSET ?";
     try (Connection conn = dataSource.getConnection();
         PreparedStatement listLocationsStmt = conn.prepareStatement(listLocationsString)) {
       listLocationsStmt.setString(1, locationType);
@@ -231,8 +231,8 @@ public class CloudSqlDao implements LocationDao {
         if (rs.next()) {
           totalNumRows = rs.getInt(1);
         }
-        if (totalNumRows > offset + 10) {
-          return new Result<>(resultLocations, Integer.toString(offset + 10));
+        if (totalNumRows > offset + 100) {
+          return new Result<>(resultLocations, Integer.toString(offset + 100));
         } else {
           return new Result<>(resultLocations);
         }

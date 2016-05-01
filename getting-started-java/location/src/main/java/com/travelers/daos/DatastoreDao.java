@@ -139,14 +139,14 @@ public class DatastoreDao implements LocationDao {
     }
     Query<Entity> query = Query.entityQueryBuilder()          // Build the Query
         .kind("Location")                                         // We only care about Locations
-        .limit(10)                                            // Only show 10 at a time
+        .limit(100)                                            // Only show 10 at a time
         .startCursor(startCursor)                             // Where we left off
         .orderBy(OrderBy.asc(Location.LOCATION_NAME)) // Use default Index "locationType" and "locationName"
         .build();
     QueryResults<Entity> resultList = datastore.run(query);   // Run the query
     List<Location> resultLocations = entitiesToLocations(resultList);     // Retrieve and convert Entities
     Cursor cursor = resultList.cursorAfter();                 // Where to start next time
-    if (cursor != null && resultLocations.size() == 10) {         // Are we paging? Save Cursor
+    if (cursor != null && resultLocations.size() == 100) {         // Are we paging? Save Cursor
       String cursorString = cursor.toUrlSafe();               // Cursors are WebSafe
       return new Result<>(resultLocations, cursorString);
     } else {
@@ -164,7 +164,7 @@ public class DatastoreDao implements LocationDao {
     Query<Entity> query = Query.entityQueryBuilder()          // Build the Query
         .kind("Location")                                         // We only care about Locations
         .filter(PropertyFilter.eq(Location.LOCATION_TYPE, locationType))// Only for this location type
-        .limit(10)                                            // Only show 10 at a time
+        .limit(10)                                            // Only show 100 at a time
         .startCursor(startCursor)                             // Where we left off
         // a custom datastore index is required since you are filtering by one property
         // but ordering by another
@@ -173,7 +173,7 @@ public class DatastoreDao implements LocationDao {
     QueryResults<Entity> resultList = datastore.run(query);   // Run the Query
     List<Location> resultLocations = entitiesToLocations(resultList);     // Retrieve and convert Entities
     Cursor cursor = resultList.cursorAfter();                 // Where to start next time
-    if (cursor != null && resultLocations.size() == 10) {         // Are we paging? Save Cursor
+    if (cursor != null && resultLocations.size() == 100) {         // Are we paging? Save Cursor
       String cursorString = cursor.toUrlSafe();               // Cursors are WebSafe
       return new Result<>(resultLocations, cursorString);
     } else {

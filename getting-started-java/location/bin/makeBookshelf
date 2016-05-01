@@ -30,7 +30,7 @@ SCOPES="datastore,userinfo-email,logging-write,storage-full,cloud-platform"
 TAGS=http-server
 
 MIN_INSTANCES=1
-MAX_INSTANCES=10
+MAX_INSTANCES=100
 TARGET_UTILIZATION=0.6
 
 SERVICE=frontend-web-service
